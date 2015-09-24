@@ -1,0 +1,12 @@
+(define (add a b)
+  (if (= 0 a)
+      b
+      (inc (add (dec a) b))
+      )
+  )
+(define (inc a)
+  (+ 1 a)
+  )
+(define (dec a)
+  (- a 1)
+  )

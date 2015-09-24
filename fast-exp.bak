@@ -1,0 +1,25 @@
+(define (expn b n)
+  (define (mul a count)
+    (if (= count 0)
+    a
+    (mul (* a b) (- count 1))))
+  (mul 1 n))
+
+
+(define (fast-expn b n)
+  (iter 1 b n))
+
+(define (iter a b n)
+  (cond ((= n 0) a)
+        ((even? n) (iter a (square b) (/ n 2)))
+        (else (iter (* a b) b (- n 1)))))
+  
+
+(define (fast-expn-rec b n)
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-expn-rec b (/ n 2))))
+        (else (* b (fast-expn-rec b (- n 1))))))
+
+(define (square x)
+  (* x x))
+
