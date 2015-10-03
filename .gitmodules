@@ -1,0 +1,3 @@
+[submodule "mesos/src/github.com/mesosphere/mesos-framework-tutorial"]
+	path = mesos/src/github.com/mesosphere/mesos-framework-tutorial
+	url = https://github.com/mesosphere/mesos-framework-tutorial.git
