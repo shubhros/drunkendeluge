@@ -83,6 +83,101 @@
            (iter (- trials-remaining 1) (+ trials-passed 1)))
           (else
            (iter (- trials-remaining 1) trials-passed))))
-  (iter trials 0)))
+  (iter trials 0))
 
 
+;; Mutable data structures - Mutable pairs
+
+(define (my-append list1 list2)
+  (if (null? list1)
+      list2
+      (cons (car list1) (my-append (cdr list1) list2))))
+
+
+(define (my-append! list1 list2)
+  (set-cdr! (my-last-pair list1) list2)
+  list1)
+
+(define (my-last-pair x)
+  (if (null? x)
+      x
+      (my-last-pair (cdr x))))
+
+
+(define (make-cycle x)
+  (set-cdr! (last-pair x) x)
+  x)
+
+
+(define (mystery x)
+  (define (loop x y)
+    (if (null? x)
+        y
+        (let ((temp (cdr x)))
+          (set-cdr! x y)
+          (loop temp x))))
+  (loop x '()))
+
+
+(define (set-to-wow! x)
+  (set-car! (car x) 'wow))
+
+(define (find-whether-unique p l)
+  (cond ((not (pair? l)) #t)
+        ((eq? p (car l)) #f)
+        (else 
+         (find-whether-unique p (cdr l)))))
+
+
+(define (count-pairs l)
+  (let ((gl '()))
+    (define (helper x)
+      (if 
+       (or (not (pair? x))
+           (memq x gl))
+       0
+       (begin
+         (set! gl (cons x gl))
+         (display gl)
+         (display "\n")
+         (display x)
+         (display "\n")
+         (+ (helper (car x))
+            (helper (cdr x))
+            1))))
+    (helper l)))
+
+(define (find-loop l)
+  (let ((gl '()))
+    (define (helper x)
+      (if (not (pair? x))
+          #f
+          (if (memq x gl)
+              #t
+              (begin
+                (set! gl (cons x gl))
+                (display gl)
+                (display "\n")
+                (helper (cdr x))))))
+      (helper l)))
+
+
+(define (my-cons x y)
+  (define (set-x! v) (set! x v))
+  (define (set-y! v) (set! y v))
+  (define (dispatch m)
+    (cond ((eq? m 'car) x)
+          ((eq? m 'cdr) y)
+          ((eq? m 'set-car!) set-x!)
+          ((eq? m 'set-cdr!) set-y!)
+          ))
+  dispatch)
+
+(define (my-car z) (z 'car))
+(define (my-cdr z) (z 'cdr))
+(define (my-set-car! z new-value)
+  ((z 'set-car!) new-value)
+  z)
+(define (my-set-cdr! z new-value)
+  ((z 'set-cdr!) new-value)
+  z)

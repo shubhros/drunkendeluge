@@ -1,6 +1,8 @@
 -module(lib_misc).
 -export([for/3, qsort/1, pythag/1, perms/1, max/2, f/1, filter/2, odds_and_evens/1,
-       tuple_to_list/1, my_time_func/1]).
+       tuple_to_list/1, my_time_func/1, sum/1,mysum/1, square/1]).
+
+-author({shubhro, sinha}).
 
 for(Max, Max, F)->
     [F(Max)];
@@ -74,3 +76,17 @@ my_time_func(F)->
     {S4 - S1, S5 - S2, S6 - S3}.
     
 
+sum(L) ->
+    sum(L, 0).
+
+sum([], N) ->
+    N;
+sum([H|T], N) ->
+    sum(T, H+N).
+
+mysum(L)->
+   lists:sum(L).
+
+square(X) ->
+    =X * X.
+    
