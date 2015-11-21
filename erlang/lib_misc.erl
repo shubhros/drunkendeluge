@@ -88,5 +88,5 @@ mysum(L)->
    lists:sum(L).
 
 square(X) ->
-    =X * X.
+    X * X.
     

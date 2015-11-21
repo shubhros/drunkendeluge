@@ -181,3 +181,97 @@
 (define (my-set-cdr! z new-value)
   ((z 'set-cdr!) new-value)
   z)
+
+
+;; QUEUE data structure using mutable lists
+
+(define (front-ptr queue) (car queue))
+(define (rear-ptr queue) (cdr queue))
+(define (set-front-ptr! queue item) (set-car! queue item))
+(define (set-rear-ptr! queue item) (set-cdr! queue item))
+
+(define (empty-queue? queue) (null? (front-ptr queue)))
+(define (make-queue) (cons '() '()))
+(define (front-queue queue)
+  (if (empty-queue? queue)
+      (error "FRONT called with an empty queue" queue)
+      (car (front-ptr queue))))
+
+(define (insert-queue! queue item)
+  (let ((new-pair (cons item '())))
+    (cond ((empty-queue? queue)
+           (set-front-ptr! queue new-pair)
+           (set-rear-ptr! queue new-pair)
+           queue)
+          (else
+           (set-cdr! (rear-ptr queue) new-pair)
+           (set-rear-ptr! queue new-pair)
+           queue))))
+
+(define (delete-queue! queue)
+  (cond ((empty-queue? queue)
+         (error "DELETE called with an empty queue" queue))
+        (else
+         (set-front-ptr! queue (cdr (front-ptr queue)))
+         queue)))
+
+(define (print-queue queue)
+  (front-ptr queue))
+
+
+
+;; QUEUE data structure using ordinary lists and function states
+
+(define (make-queue1)
+  (let ((front-p '())
+        (rear-p '()))
+    (define (empty-queue?) (null? front-p))
+    (define (insert-queue! item)
+      (let ((new-pair (cons item '())))
+        (cond ((empty-queue?)
+               (set! front-p new-pair)
+               (set! rear-p new-pair))
+              (else
+               (set-cdr! rear-p new-pair)
+               (set! rear-p new-pair)))))
+    (define (delete-queue!)
+      (cond ((empty-queue?)
+             (error "DELETE called on empty queue"))
+            (else
+             (set! front-p (cdr front-p)))))
+    (define (print-queue)
+      front-p)
+    (define (dispatch m)
+      (cond ((eq? m 'empty-queue)
+             (empty-queue?))
+            ((eq? m 'insert-queue!)
+             insert-queue!)
+            ((eq? m 'delete-queue!)
+             (delete-queue!))
+            ((eq? m 'print-queue)
+             (print-queue))))
+    dispatch))
+
+(define (insert-queue1 queue item)
+  ((queue 'insert-queue!) item))
+
+(define (delete-queue1 queue)
+  (queue 'delete-queue!))
+
+(define (print-queue1 queue)
+  (queue 'print-queue))
+
+(define (test-queue)
+  (let ((q (make-queue1)))
+    (insert-queue1 q 'a)
+    (insert-queue1 q 'b)
+    (insert-queue1 q 'c)
+    (display (print-queue1 q))
+    (display "\n")
+    (delete-queue1 q)
+    (display (print-queue1 q))
+    (display "\n")
+    (delete-queue1 q)
+    (display (print-queue1 q))
+    (display "\n")
+    ))
