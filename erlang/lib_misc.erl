@@ -1,6 +1,7 @@
 -module(lib_misc).
 -export([for/3, qsort/1, pythag/1, perms/1, max/2, f/1, filter/2, odds_and_evens/1,
-       tuple_to_list/1, my_time_func/1, sum/1,mysum/1, square/1, on_exit/2]).
+       tuple_to_list/1, my_time_func/1, sum/1,mysum/1, square/1, on_exit/2,
+        start/1]).
 
 -author({shubhro, sinha}).
 
@@ -99,3 +100,13 @@ on_exit(Pid, Fun) ->
                           Fun(Why)
                   end
           end).
+
+start(Fs) ->
+    spawn(fun() ->
+                  [spawn_link(F) || F <- Fs],
+                  receive
+                      after infinity ->
+                              true
+                      end
+          end).
+              
