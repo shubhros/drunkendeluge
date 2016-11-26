@@ -359,3 +359,91 @@
           ((or (atom? s1) (atom? s2)) #f)
           (else
            (eqlist? s1 s2)))))
+
+(define remberS
+  (lambda (s l)
+    (cond
+     ((null? l) '())
+     ((equal (car l) s) (cdr l))
+     (else
+      (cons (car l)
+            (remberS s (cdr l)))))))
+
+(define operator?
+  (lambda (x)
+    (cond
+     ((or (eq? x '+)
+          (eq? x '-)
+          (eq? x '*)
+          (eq? x '/)) #t)
+     (else
+      #f))))
+
+
+(define numbered?
+  (lambda (aexp)
+    (cond
+     ((atom? aexp) (number? aexp))
+     ((and 
+       (numbered? (car aexp))
+       (operator? (car (cdr aexp)))
+       (numbered? (car (cdr (cdr aexp)))))))))   
+
+
+(define getoperator
+  (lambda (symop)
+    (cond
+     ((eq? symop '+) +)
+     ((eq? symop '-) -)
+     ((eq? symop '*) *)
+     ((eq? symop '/) /))))
+
+(define value-in
+  (lambda (nexp)
+    (cond
+     ((number? nexp) nexp)
+     (else
+      ((getoperator (car (cdr nexp))) 
+       (value-in (car nexp))
+       (value-n (car (cdr (cdr nexp)))))))))
+
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car aexp)))
+
+(define 2nd-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr aexp)))))
+
+(define operator
+  (lambda (aexp)
+    (car (cdr aexp))))
+
+(define value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     (else
+      ((getoperator (operator nexp))
+       (value (1st-sub-exp nexp))
+       (value (2nd-sub-exp nexp)))))))
+                    
+(define sero?
+  (lambda (n)
+    (null? n)))
+
+(define edd1
+  (lambda (n)
+    (cons '() n)))
+(define zub1
+  (lambda (n)
+    (cdr n)))
+
+(define zadd
+  (lambda (m n)
+    (cond
+     ((sero? n) m)
+     (else
+      (edd1
+       (zadd (zub1 n) m))))))
+     
