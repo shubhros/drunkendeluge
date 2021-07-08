@@ -1,0 +1,50 @@
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+let mapleader = ","
+let &t_ut=''
+se bg=dark
+colo PaperColor
+nnoremap ; :
+nmap <silent> <Leader>ef	:vsplit<bar>wincmd l<bar>exe "norm!  Ljz<c-v><cr>"<cr>:set scb<cr>:wincmd h<cr>:set scb<cr>
+" ack.vim --- {{{
+
+" Use ripgrep for searching ⚡️
+" Options include:
+" --vimgrep -> Needed to parse the rg response properly for ack.vim
+" --type-not sql -> Avoid huge sql file dumps as it slows down the search
+" --smart-case -> Search case insensitive if all lowercase pattern, Search case sensitively otherwise
+let g:ackprg = 'rg --vimgrep --type-not sql --smart-case'
+
+" Auto close the Quickfix list after pressing '<enter>' on a list item
+let g:ack_autoclose = 1
+
+" Any empty ack search will search for the work the cursor is on
+let g:ack_use_cword_for_empty_search = 1
+
+" Don't jump to first match
+cnoreabbrev Ack Ack!
+
+" Maps <leader>/ so we're ready to type the search keyword
+nnoremap <F5> :Ack!<Space>
+" }}}
+
+" Navigate quickfix list with ease
+nnoremap <silent> [q :cprevious<CR>
+nnoremap <silent> ]q :cnext<CR>
+
+"Input ",gd". It searches the string at the current cursor position from tag files.(it's like searching definition)
+nmap gd :Gtags <C-R>=expand("<cword>")<CR><CR>
+"Input ",gr". It searches the referenced places of the string where the cursor is located.
+nmap gr :Gtags -r <C-R>=expand("<cword>")<CR><CR>
+"Input ",gs". It searches the symbols which are not defined in GTAGS.
+nmap <Leader>gs :Gtags -s <C-R>=expand("<cword>")<CR><CR>
+"Input ",gg". It searches "pattern" from all files.(*.h, *.c, *.txt and etc)
+nmap <Leader>gg :Gtags -go <C-R>=expand("<cword>")<CR><CR>
+"Input ",gp". It searches files.
+nmap <Leader>gp :Gtags -Po <C-R>=expand("<cword>")<CR><CR>
+"Input ",ge". It searches "--regexp" pattern.
+nmap <Leader>ge :Gtags -ge <C-R>=expand("<cword>")<CR><CR>
+let g:Gtags_No_Auto_Jump=1
+
+nnoremap <Space><Space> :CtrlP<CR>
