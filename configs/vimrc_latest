@@ -1,11 +1,19 @@
 execute pathogen#infect()
 syntax on
 filetype plugin indent on
-let mapleader = ","
+nnoremap <SPACE> <Nop>
+let mapleader = " "
 let &t_ut=''
 se bg=dark
-colo PaperColor
 nnoremap ; :
+se ts=4
+se sw=4
+se ai
+se cindent
+se hlsearch
+se ic
+se nu
+se rnu
 nmap <silent> <Leader>ef	:vsplit<bar>wincmd l<bar>exe "norm!  Ljz<c-v><cr>"<cr>:set scb<cr>:wincmd h<cr>:set scb<cr>
 " ack.vim --- {{{
 
@@ -47,4 +55,21 @@ nmap <Leader>gp :Gtags -Po <C-R>=expand("<cword>")<CR><CR>
 nmap <Leader>ge :Gtags -ge <C-R>=expand("<cword>")<CR><CR>
 let g:Gtags_No_Auto_Jump=1
 
-nnoremap <Space><Space> :CtrlP<CR>
+set rtp+=~/.fzf
+nnoremap <leader><Space> :GFiles<CR>
+nnoremap <leader>bb :Buffers<CR>
+nnoremap <leader>gg :GFles?<CR>
+" Tell vim to remember certain things when we exit
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='10,\"100,:20,%,n~/.viminfo
+function! ResCur()
+  if line("'\"") <= line("$")
+    normal! g`"
+    return 1
+  endif
+endfunction
+:autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
